@@ -1,0 +1,25 @@
+name: Build AAB from ZIP
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip
+        run: unzip -o "*.zip" || true
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Setup Android
+        uses: android-actions/setup-android@v3
+      - name: Build
+        run: |
+          chmod +x gradlew
+         ./gradlew bundleRelease
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: SAFAR20-AAB-READY
+          path: app/build/outputs/bundle/release/app-release.aab
