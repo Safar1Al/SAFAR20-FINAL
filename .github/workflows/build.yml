@@ -1,3 +1,4 @@
+
 name: Build AAB
 on: [push]
 jobs:
@@ -20,4 +21,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SAFAR20-AAB-FINAL
-          path: app/build/outputs/bundle/release/*.aab
+          path: app/build/outputs/bundle/release/app-release.aab
