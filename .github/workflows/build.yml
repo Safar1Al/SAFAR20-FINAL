@@ -1,25 +1,30 @@
-name: Build AAB from ZIP
+
+name: Build AAB
 on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unzip
-        run: unzip -o "*.zip" || true
-      - name: Setup JDK
+      - name: Prepare
+        run: |
+          unzip -o SAFAR20_P*.zip
+          rm -f *.zip
+          mkdir -p gradle/wrapper
+          curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/master/gradle/wrapper/gradle-wrapper.jar
+      - name: JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
-      - name: Setup Android
+      - name: Android
         uses: android-actions/setup-android@v3
       - name: Build
         run: |
           chmod +x gradlew
          ./gradlew bundleRelease
-      - name: Upload AAB
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: SAFAR20-AAB-READY
-          path: app/build/outputs/bundle/release/app-release.aab
+          name: SAFAR20-AAB-FINAL
+          path: app/build/outputs/bundle/release/*.aab
